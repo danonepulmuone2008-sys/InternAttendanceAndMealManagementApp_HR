@@ -29,6 +29,7 @@ interface User {
   name: string;
   used: number;
   transferNet?: number;
+  is_active?: boolean;
 }
 
 interface Receipt {
@@ -73,6 +74,7 @@ export default function AdminMealsPage() {
 
   const [users, setUsers] = useState<User[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
+  const [includeInactive, setIncludeInactive] = useState(false);
 
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [sheetTab, setSheetTab] = useState<"receipts" | "transfers">("receipts");
@@ -154,7 +156,7 @@ export default function AdminMealsPage() {
       try {
         const token = await getToken();
         if (!token) return;
-        const res = await fetch(`/api/admin/users?year=${viewYear}&month=${viewMonth}`, {
+        const res = await fetch(`/api/admin/users?year=${viewYear}&month=${viewMonth}&includeInactive=${includeInactive}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) setUsers(await res.json());
@@ -162,7 +164,7 @@ export default function AdminMealsPage() {
         setUsersLoading(false);
       }
     })();
-  }, [authUser?.id, viewYear, viewMonth, fetchLimit]);
+  }, [authUser?.id, viewYear, viewMonth, includeInactive, fetchLimit]);
 
   const fetchReceipts = useCallback(async (userId: string) => {
     const token = await getToken();
@@ -385,6 +387,14 @@ async function saveItemAmount(receiptId: string, itemId: string) {
       </div>
 
       {/* 인턴별 카드 */}
+      <div className="flex items-center justify-end px-4 pt-3 pb-1">
+        <button
+          onClick={() => setIncludeInactive(v => !v)}
+          className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${includeInactive ? "bg-gray-700 text-white border-gray-700" : "bg-white text-gray-500 border-gray-200"}`}
+        >
+          <span>{includeInactive ? "✓" : ""} 비활성 포함</span>
+        </button>
+      </div>
       <div className="flex flex-col gap-2 px-4 pt-2">
         {usersLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
@@ -408,7 +418,12 @@ async function saveItemAmount(receiptId: string, itemId: string) {
                     >
                       {user.name.slice(0, 1)}
                     </div>
-                    <p className="text-base font-bold text-gray-900">{user.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-base font-bold text-gray-900">{user.name}</p>
+                      {user.is_active === false && (
+                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-400">비활성</span>
+                      )}
+                    </div>
                   </div>
                   <span className="text-xs text-gray-400">{pct}% 사용</span>
                 </div>

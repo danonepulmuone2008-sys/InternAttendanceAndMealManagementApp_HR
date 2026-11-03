@@ -13,18 +13,23 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url)
     const year = searchParams.get("year") ?? String(new Date().getFullYear())
     const month = searchParams.get("month") ?? String(new Date().getMonth() + 1)
+    const includeInactive = searchParams.get("includeInactive") === "true"
 
     const KST = 9 * 60 * 60 * 1000
     const y = Number(year), m = Number(month)
     const startDate = new Date(Date.UTC(y, m - 1, 1) - KST).toISOString()
     const endDate   = new Date(Date.UTC(y, m,     1) - KST).toISOString()
 
-    const { data: users, error: usersError } = await supabaseAdmin
+    let usersQuery = supabaseAdmin
       .from("users")
-      .select("id, name, department, position, email, phone")
-      .eq("is_active", true)
+      .select("id, name, department, position, email, phone, is_active")
       .eq("role", "employee")
+      .order("is_active", { ascending: false })
       .order("name")
+
+    if (!includeInactive) usersQuery = usersQuery.eq("is_active", true)
+
+    const { data: users, error: usersError } = await usersQuery
 
     if (usersError) throw usersError
 
