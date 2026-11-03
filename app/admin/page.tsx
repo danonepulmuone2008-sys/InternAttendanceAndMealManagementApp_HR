@@ -17,6 +17,7 @@ type User = {
   approver: boolean;
   is_remote: boolean;
   use_session_tracking: boolean;
+  work_days_per_week: number;
 };
 
 type EditForm = {
@@ -30,6 +31,7 @@ type EditForm = {
   approver: boolean;
   is_remote: boolean;
   use_session_tracking: boolean;
+  work_days_per_week: number;
 };
 
 async function getToken(): Promise<string> {
@@ -107,6 +109,7 @@ export default function AdminHomePage() {
       approver: user.approver ?? false,
       is_remote: user.is_remote ?? false,
       use_session_tracking: user.use_session_tracking ?? false,
+      work_days_per_week: user.work_days_per_week ?? 5,
     });
   }
 
@@ -347,6 +350,17 @@ export default function AdminHomePage() {
                       <button key={String(v)} onClick={() => setEditForm((f) => f ? { ...f, use_session_tracking: v } : f)}
                         className={`flex-1 h-11 rounded-xl text-sm font-medium border transition-colors ${editForm.use_session_tracking === v ? (v ? "bg-blue-500 text-white border-blue-500" : "bg-gray-400 text-white border-gray-400") : "bg-gray-50 text-gray-600 border-gray-200"}`}>
                         {v ? "사용" : "미사용"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">주 근무일수</label>
+                  <div className="flex gap-2">
+                    {[3, 4, 5].map((d) => (
+                      <button key={d} onClick={() => setEditForm((f) => f ? { ...f, work_days_per_week: d } : f)}
+                        className={`flex-1 h-11 rounded-xl text-sm font-medium border transition-colors ${editForm.work_days_per_week === d ? "bg-blue-500 text-white border-blue-500" : "bg-gray-50 text-gray-600 border-gray-200"}`}>
+                        {d}일
                       </button>
                     ))}
                   </div>
