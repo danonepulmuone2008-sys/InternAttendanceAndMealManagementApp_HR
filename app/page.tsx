@@ -615,8 +615,8 @@ export default function HomePage() {
 
       {/* 알림 허용 배너 */}
       {showNotifBanner && (
-        <div className="fixed bottom-[68px] left-0 right-0 z-40 px-4">
-          <div className="bg-gray-900 rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-xl gap-3">
+        <div className="fixed bottom-[68px] left-0 right-0 z-40 px-4 flex justify-center">
+          <div className="bg-gray-900 rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-xl gap-3 w-full max-w-[390px]">
             <div className="flex items-center gap-2.5 min-w-0">
               <span className="text-xl flex-shrink-0">🔔</span>
               <div className="min-w-0">
