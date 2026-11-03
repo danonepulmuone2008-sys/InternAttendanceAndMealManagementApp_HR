@@ -421,7 +421,7 @@ export default function AdminAttendancePage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
-      setVacUsers((json.interns ?? []).filter((u: { id: string; name: string; is_active: boolean }) => u.is_active).map((u: { id: string; name: string }) => ({ id: u.id, name: u.name })));
+      setVacUsers((json.interns ?? []).filter((u: { id: string; name: string; is_active: boolean; role: string }) => u.is_active && u.role === "employee").map((u: { id: string; name: string }) => ({ id: u.id, name: u.name })));
     } finally {
       setVacUsersLoading(false);
     }
