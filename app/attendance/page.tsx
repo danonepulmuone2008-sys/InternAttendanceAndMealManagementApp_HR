@@ -10,7 +10,7 @@ import { useAttendanceStore } from "@/store/attendanceStore";
 import Pagination from "@/components/Pagination";
 
 const CALENDAR_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
-const MAX_DAY_HOURS = 10;
+const MAX_DAY_HOURS = 8;
 const DAY_LABELS = ["월", "화", "수", "목", "금"];
 
 type CalEvent = { type: "vacation" | "business_trip"; label: string; status?: string; startTime?: number | null; endTime?: number | null; lunchBreak?: boolean | null; hours?: number | null; tripStartTime?: string | null; tripEndTime?: string | null };
@@ -583,7 +583,7 @@ export default function AttendancePage() {
             {weekDays.map(d => (
               <div key={d.day} className="flex flex-col items-center flex-1 gap-1.5 group">
                 <span className="text-xs text-gray-500 font-medium h-4 flex items-center">{d.hours > 0 ? fmtHM(d.hours) : ""}</span>
-                <div className="relative w-full h-16 bg-gray-100 rounded-lg flex items-end">
+                <div className="relative w-full h-16 bg-gray-100 rounded-lg flex items-end overflow-hidden">
                   <div className={`w-full rounded-lg transition-all duration-500 ${d.hours > 0 ? "bg-blue-500" : ""}`} style={{ height: d.hours > 0 ? `${(d.hours / MAX_DAY_HOURS) * 100}%` : "0%" }} />
                   {d.hours > 0 && (
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">

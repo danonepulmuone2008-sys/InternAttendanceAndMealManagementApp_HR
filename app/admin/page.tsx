@@ -357,7 +357,7 @@ export default function AdminHomePage() {
                 <div>
                   <label className="text-xs font-medium text-gray-500 mb-1.5 block">주 근무일수</label>
                   <div className="flex gap-2">
-                    {[3, 4, 5].map((d) => (
+                    {[1, 2, 3, 4, 5].map((d) => (
                       <button key={d} onClick={() => setEditForm((f) => f ? { ...f, work_days_per_week: d } : f)}
                         className={`flex-1 h-11 rounded-xl text-sm font-medium border transition-colors ${editForm.work_days_per_week === d ? "bg-blue-500 text-white border-blue-500" : "bg-gray-50 text-gray-600 border-gray-200"}`}>
                         {d}일

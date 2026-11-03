@@ -60,8 +60,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-6">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6">
+      <div className="w-full">
         {/* 로고 */}
         <div className="mb-10 text-center">
           <div className="flex items-center justify-center mx-auto mb-4">
