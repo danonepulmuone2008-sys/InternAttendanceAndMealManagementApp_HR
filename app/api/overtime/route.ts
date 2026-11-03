@@ -82,15 +82,16 @@ export async function GET(req: Request) {
     }
 
     const companyHolidays = await fetchCompanyHolidaySet()
-    const expectedHours = countWorkingDays(startDate, effectiveEnd, companyHolidays) * dailyWorkHours
+    const expectedHours = countWorkingDays(startDate, effectiveEnd, companyHolidays) * dailyWorkHours * (workDaysPerWeek / 5)
 
     const { data: userProfile } = await supabaseAdmin
       .from("users")
-      .select("use_session_tracking")
+      .select("use_session_tracking, work_days_per_week")
       .eq("id", userId)
       .maybeSingle()
 
     const useSessionTracking = userProfile?.use_session_tracking ?? false
+    const workDaysPerWeek = userProfile?.work_days_per_week ?? 5
     let actualAttendanceHours = 0
 
     if (useSessionTracking) {

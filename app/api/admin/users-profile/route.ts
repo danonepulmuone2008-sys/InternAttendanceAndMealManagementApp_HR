@@ -9,7 +9,7 @@ export async function GET(req: Request) {
 
     let query = supabaseAdmin
       .from("users")
-      .select("id, name, email, phone, department, position, role, is_active, created_at, is_remote, use_session_tracking")
+      .select("id, name, email, phone, department, position, role, is_active, created_at, is_remote, use_session_tracking, work_days_per_week")
       .order("is_active", { ascending: false })
       .order("name", { ascending: true });
 
@@ -40,7 +40,7 @@ export async function PATCH(req: Request) {
     const auth = await requireAdmin(req);
     if (!auth.ok) return auth.response;
 
-    const { id, name, department, position, phone, email, role, is_active, is_remote, use_session_tracking } = await req.json();
+    const { id, name, department, position, phone, email, role, is_active, is_remote, use_session_tracking, work_days_per_week } = await req.json();
     if (!id) return NextResponse.json({ error: "id가 필요합니다" }, { status: 400 });
 
     // 비활성화 시점 자동 기록
@@ -52,7 +52,7 @@ export async function PATCH(req: Request) {
       deactivated_at = null;
     }
 
-    const updatePayload: Record<string, unknown> = { name, department, position, phone, email, role, is_active, is_remote, use_session_tracking, updated_at: new Date().toISOString() };
+    const updatePayload: Record<string, unknown> = { name, department, position, phone, email, role, is_active, is_remote, use_session_tracking, work_days_per_week: work_days_per_week ?? 5, updated_at: new Date().toISOString() };
     if (deactivated_at !== undefined) updatePayload.deactivated_at = deactivated_at;
 
     const { error } = await supabaseAdmin
